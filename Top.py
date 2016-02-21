@@ -4,6 +4,28 @@ workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE
 workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS')
 worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
 worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+workbook_pop_growth = xlrd.open_workbook('WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
+workbook_pop_growth = workbook_pop_growth.sheet_by_name('ESTIMATES')
+
+def find_countries(sheet, year):
+    keywords = ['Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
+                'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
+                'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
+                'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
+                'Micronesia','Polynesia']
+    data = {}
+    for i in range(sheet.nrows):
+        if i > 11:
+             row = sheet.row_values(i)
+             for j in range(len(row)):
+                if not(row[2] in keywords):
+                    data[row[2]] = row[(year-1950)/5 + 5]
+
+    sorted(data.items(), key=lambda x:x[1])
+    print(data)
+    return None
+
+
 
 
 def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
@@ -59,8 +81,8 @@ while True:
                     print('4')
                 else:
                     if command == '5':
-                        #request5()
-                        print('5')
+                        command = input('please insert year:')
+                        find_countries(workbook_pop_growth, command)
                     else:
                         if command == '6':
                             #request5()

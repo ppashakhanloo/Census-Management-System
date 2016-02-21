@@ -4,7 +4,7 @@ workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE
 workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS')
 worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
 worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
-workbook_pop_growth = xlrd.open_workbook('WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
+workbook_pop_growth = xlrd.open_workbook('Data/WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
 workbook_pop_growth = workbook_pop_growth.sheet_by_name('ESTIMATES')
 
 def find_countries(sheet, year):

@@ -30,3 +30,43 @@ def find_row_col_index(string_value, sheet):
 
 
 print(get_data_by_country_year(worksheet_male, worksheet_female, "Djibouti", "1950"))
+
+
+
+
+
+while True:
+    print('please enter command number:')
+    print('1. get population information for male and female.')
+    print('2. change population information for a country at special year.')
+    print('3. plot population information of of a country.')
+    print('4. plot population information for future.')
+    print('5. sort population information.')
+    print('6. exit.')
+    command = input('enter command:')
+    if command == '1':
+        #request1()
+        print('1')
+    else:
+        if command == '2':
+            #request2()
+            print('2')
+        else:
+            if command == '3':
+               # request3()
+                print('3')
+            else:
+                if command == '4':
+                    #request4()
+                    print('4')
+                else:
+                    if command == '5':
+                        #request5()
+                        print('5')
+                    else:
+                        if command == '6':
+                            #request5()
+                            print('6')
+                            break
+                        else:
+                            print('invalid instruction!')

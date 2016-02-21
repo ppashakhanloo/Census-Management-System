@@ -29,11 +29,7 @@ def find_row_col_index(string_value, sheet):
     return None
 
 
-print(get_data_by_country_year(worksheet_male, worksheet_female, "Djibouti", "1950"))
-
-
-
-
+# print(get_data_by_country_year(worksheet_male, worksheet_female, "Djibouti", "1950"))
 
 while True:
     print('please enter command number:')
@@ -45,8 +41,10 @@ while True:
     print('6. exit.')
     command = input('enter command:')
     if command == '1':
-        #request1()
-        print('1')
+        country = input('enter country')
+        year = input('enter year')
+        male_res, female_res = get_data_by_country_year(worksheet_male, worksheet_female, country, year)
+        print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res))
     else:
         if command == '2':
             #request2()

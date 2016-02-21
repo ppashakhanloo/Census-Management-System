@@ -41,6 +41,16 @@ def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
 
     return val_male, val_female
 
+def change_data_by_country_year(worksheet_male, worksheet_female, country, year, male_or_female, new_val):
+    if male_or_female == 'male':
+        row_country_m, col_country_m = find_row_col_index(country, worksheet_male)
+        row_year_m, col_year_m = find_row_col_index(year, worksheet_male)
+        worksheet_male.write(row_country_m, col_year_m, new_val)
+    elif male_or_female == 'female':
+        row_country_f, col_country_f = find_row_col_index(country, worksheet_female)
+        row_year_f, col_year_f = find_row_col_index(year, worksheet_female)
+        worksheet_female.write(row_country_f, col_year_f, new_val)
+
 
 def find_row_col_index(string_value, sheet):
     for i in range(sheet.nrows):
@@ -50,9 +60,6 @@ def find_row_col_index(string_value, sheet):
                     return i,j
     return None
 
-
-# print(get_data_by_country_year(worksheet_male, worksheet_female, "Djibouti", "1950"))
-
 while True:
     print('please enter command number:')
     print('1. get population information for male and female.')
@@ -61,16 +68,20 @@ while True:
     print('4. plot population information for future.')
     print('5. sort population information.')
     print('6. exit.')
-    command = input('enter command:')
+    command = input('enter command: ')
     if command == '1':
-        country = input('enter country')
-        year = input('enter year')
+        country = input('enter country: ')
+        year = input('enter year: ')
         male_res, female_res = get_data_by_country_year(worksheet_male, worksheet_female, country, year)
-        print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res))
+        print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res)+'\n')
     else:
         if command == '2':
-            #request2()
-            print('2')
+            # country = input('enter country')
+            # year = input('enter year')
+            # male_or_female = input('enter male or female')
+            # new_val = input('enter new value')
+            # change_data_by_country_year(worksheet_male, worksheet_female, country, year, male_or_female, new_val)
+            print('Done.')
         else:
             if command == '3':
                # request3()

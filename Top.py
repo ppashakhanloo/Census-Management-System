@@ -19,7 +19,7 @@ def find_countries(sheet, year):
              row = sheet.row_values(i)
              for j in range(len(row)):
                 if not(row[2] in keywords):
-                    data[row[2]] = row[(year-1950)/5 + 5]
+                    data[row[2]] = row[(year-1950)/5 + 5]*100
 
     sorted(data.items(), key=lambda x:x[1])
     print(data)

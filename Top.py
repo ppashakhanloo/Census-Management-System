@@ -1,6 +1,8 @@
 import xlrd
 from xlutils3.copy import copy
 import os
+import Diagrammer
+
 
 workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS')
 workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS')
@@ -84,6 +86,7 @@ while True:
     print('5. sort population information.')
     print('6. exit.')
     command = input('enter command: ')
+
     if command == '1':
         country = input('enter country: ')
         year = input('enter year: ')
@@ -99,8 +102,32 @@ while True:
             print('Done.')
         else:
             if command == '3':
-               # request3()
-                print('3')
+                country = input('enter country')
+                sex = input('enter sex, m for male anything else for female')
+
+                worksheet = ''
+
+                if sex == 'm':
+                    worksheet = worksheet_male
+                else:
+                    worksheet = workbook_female
+
+                output_dir = input('output dir?')
+                x = range(1950, 2015)
+
+                row_country_m, col_country_m = find_row_col_index(country, worksheet)
+
+                y = []
+
+                for year in x:
+
+                    row_year_m, col_year_m = find_row_col_index(year, worksheet)
+                    val = worksheet.cell(row_country_m, col_year_m).value
+                    y.append(val)
+
+                Diagrammer.draw_diagram(x, y, 'population', 'year', '1000 persons', output_dir)
+                print('Diagram was created successfully')
+
             else:
                 if command == '4':
                     #request4()

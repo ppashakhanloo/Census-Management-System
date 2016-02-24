@@ -1,5 +1,5 @@
 import xlrd
-from xlutils3.copy import copy
+from xlutils.copy import copy
 import os
 import Diagrammer
 

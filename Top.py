@@ -22,7 +22,6 @@ def find_sorted_countries_interval(sheet, first, last):
             last = last-1
     first = (first-1950)//5 + 5
     last = (last -1950)//5 + 5
-    print(last)
     for i in range(sheet.nrows):
         if i > 27:
             row = sheet.row_values(i)

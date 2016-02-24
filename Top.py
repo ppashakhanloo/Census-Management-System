@@ -27,8 +27,8 @@ def find_sorted_countries_interval(sheet, first, last):
             row = sheet.row_values(i)
             if not(row[2] in keywords):
                 x = 0
-                for i in range(first,last+1) :
-                    x = x+int(float(row[i])*100)
+                for j in range(first,last+1) :
+                    x = x+int(float(row[j])*100)
                 data[row[2]] = x
     items = [(v, k) for k, v in data.items()]
     items.sort()

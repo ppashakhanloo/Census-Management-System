@@ -11,6 +11,33 @@ worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 workbook_pop_growth = xlrd.open_workbook('Data/WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
 workbook_pop_growth = workbook_pop_growth.sheet_by_name('ESTIMATES')
 
+def find_sorted_countries_interval(sheet, first, last):
+    keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
+               'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
+               'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
+               'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
+               'Micronesia','Polynesia']
+    data = {}
+    if (last%5)==0:
+            last = last-1
+    first = (first-1950)//5 + 5
+    last = (last -1950)//5 + 5
+    print(last)
+    for i in range(sheet.nrows):
+        if i > 27:
+            row = sheet.row_values(i)
+            if not(row[2] in keywords):
+                x = 0
+                for i in range(first,last+1) :
+                    x = x+int(float(row[i])*100)
+                data[row[2]] = x
+    items = [(v, k) for k, v in data.items()]
+    items.sort()
+    items.reverse()             # so largest is first
+    items = [k for v, k in items]
+    print(items)
+    return None
+
 def find_countries(sheet, year):
     keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
                'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
@@ -141,4 +168,22 @@ while True:
                             print('6')
                             break
                         else:
-                            print('invalid instruction!')
+                            if command == '7':
+                                #request5()
+                                print('7')
+                                break
+                            else:
+                                if command == '8':
+                                    #request5()
+                                    print('6')
+                                    break
+                                else:
+                                    if command == '9':
+                                        first = input('please insert first of interval:')
+                                        first = int(first)
+                                        last = input('please insert last of interval:')
+                                        last = int(last)
+                                        find_sorted_countries_interval(workbook_pop_growth, first, last)
+                                        break
+                                    else:
+                                        print('invalid instruction!')

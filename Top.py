@@ -11,6 +11,12 @@ worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 workbook_pop_growth = xlrd.open_workbook('Data/WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
 workbook_pop_growth = workbook_pop_growth.sheet_by_name('ESTIMATES')
 
+non_country_keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
+               'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
+               'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
+               'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
+               'Micronesia','Polynesia']
+
 def find_negative_growth_countries(sheet, year):
     keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
                'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
@@ -104,6 +110,20 @@ def get_data_by_country(worksheet_male, worksheet_female, country):
 
     return male_population, female_population
 
+
+def get_data_by_year(data_sheet, year):
+
+    row_year_m, col_year_m = find_row_col_index(year, data_sheet)
+
+    data = []
+    for i in range(28, data_sheet.nrows):
+            row = data_sheet.row_values(i)
+            if not(row[2] in non_country_keywords):
+                data.append(data_sheet.cell(i, col_year_m).value)
+
+    return data
+
+
 def change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val):
     row_country_m, col_country_m = find_row_col_index(country, workbook_male.sheet_by_name('ESTIMATES'))
     row_year_m, col_year_m = find_row_col_index(year, workbook_male.sheet_by_name('ESTIMATES'))
@@ -153,6 +173,10 @@ while True:
     print('4. plot population information for future.')
     print('5. sort population information.')
     print('6. exit.')
+    print('7. Plot population of countries in boxplot.')
+    print('8. exit.')
+    print('9. exit.')
+    print('10. exit.')
     command = get_input_option(["1", "2", "3", "4", "5", "6"], 'enter command: ')
 
     if command == '1':
@@ -184,7 +208,6 @@ while True:
 
         print('Diagram was created successfully')
 
-
     if command == '4':
         #request4()
         print('4')
@@ -195,9 +218,14 @@ while True:
         find_countries(workbook_pop_growth, year)
 
     if command == '6':
-        #request5()
-        print('6')
-        break
+        year = raw_input('year?')
+        output_dir = raw_input('output directory?')
+        data_male = get_data_by_year(worksheet_male, year)
+        data_female = get_data_by_year(worksheet_female, year)
+     
+        Diagrammer.draw_box_diagram(data_male, 'Countries Male Population', '1000 persons', output_dir + 'countries_male_population.pdf')
+        Diagrammer.draw_box_diagram(data_female, 'Countries Female Population', '1000 persons', output_dir + 'countries_female_population.pdf')
+        print('Diagrams were drawn successfully!')
 
     if command == '7':
         year = raw_input('please insert year number:')

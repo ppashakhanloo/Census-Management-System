@@ -29,4 +29,15 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
     pyplot.savefig(output_dir)
 
 
+def draw_box_diagram(data, plot_title, y_title, output_dir):
+
+    pyplot.title(plot_title)
+    pyplot.ylabel(y_title)
+
+    pyplot.boxplot(data)
+    pyplot.savefig(output_dir)
+
 #draw_diagram([10, 15, 20], [3, 10, 3], 'a', 'b', 'c', 'd.pdf')
+#draw_box_diagram([0,1,2,3,4,5,6,7,8,9,10],'MyPlot','x','y', 'myPlot.pdf')
+#pyplot.boxplot([0,1,2,3,4,5,6,7,8,9,10])
+#pyplot.show()

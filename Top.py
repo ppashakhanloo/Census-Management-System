@@ -97,13 +97,13 @@ def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
     return val_male, val_female
 
 
-def get_data_by_country(worksheet_male, worksheet_female, country):
+def get_data_by_country(worksheet_male, worksheet_female, country, start_year, end_year):
 
     male_population = []
     female_population = []
 
-    # for each year in 1950,2015
-    for year in range(1950, 2016):
+    # for each year in range
+    for year in range(start_year, end_year + 1):
         male_val, female_val = get_data_by_country_year(worksheet_male, worksheet_female, country, str(year))
         male_population.append(male_val)
         female_population.append(female_val)
@@ -197,7 +197,7 @@ while True:
         country = raw_input('enter country')
         sex = raw_input('enter sex, m for male, f for female or anything else for both')
         output_dir = raw_input('output dir?')
-        male_population, female_population = get_data_by_country(worksheet_male, worksheet_female, country)
+        male_population, female_population = get_data_by_country(worksheet_male, worksheet_female, country, 1950, 2015)
         draw_male = (sex != "f")
         draw_female = (sex != "m")
 
@@ -211,26 +211,24 @@ while True:
     if command == '4':
 
         country = raw_input('Country?')
-        estimate_methods = ['ESTIMATES', 'MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
+        estimate_methods = ['MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
                             'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
                             'CONSTANT-MORTALITY', 'NO CHANGE']
         print('choose a method among :')
         print(estimate_methods)
         method = get_input_option(estimate_methods, 'method?')
         estimate_methods.index(method)
-        male_sheet = workbook_male.sheet_by_index(estimate_methods.index(method))
-        female_sheet = workbook_female.sheet_by_index(estimate_methods.index(method))
-        print(male_sheet.cell(50, 10).value)
-        male_data, female_data = get_data_by_country(male_sheet, female_sheet, country)
+        worksheet_male = workbook_male.sheet_by_name(method)
+        worksheet_female = workbook_female.sheet_by_name(method)
+        male_data, female_data = get_data_by_country(worksheet_male, worksheet_female, country, 2015, 2100)
         total_population = []
         for i in range(len(male_data)):
             total_population.append(male_data[i] + female_data[i])
 
         output_dir = raw_input('output directory?')
-        Diagrammer.draw_diagram(range(1950, 2016), total_population, 'population', 'year', '1000 persons',
+        Diagrammer.draw_diagram(range(2015, 2101), total_population, 'population', 'year', '1000 persons',
                                 output_dir + 'population.pdf')
         print('Diagram was drawn successfully!')
-
 
     if command == '5':
         year = raw_input('please insert year number:')

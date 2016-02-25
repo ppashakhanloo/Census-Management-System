@@ -14,6 +14,9 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
             min_x = x
         if x > max_x:
             max_x = x
+    del_x = (max_x - min_x) // 10
+    min_x -= del_x
+    max_x += del_x
 
     min_y = points_y[0]
     max_y = points_y[0]
@@ -23,6 +26,9 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
             min_y = y
         if y > max_y:
             max_y = y
+    del_y = (max_y - min_y) // 10
+    min_y -= del_y
+    max_y += del_y
 
     pyplot.axis([min_x, max_x, min_y, max_y])
     pyplot.plot(points_x, points_y, color='black', linestyle='solid', linewidth=1)

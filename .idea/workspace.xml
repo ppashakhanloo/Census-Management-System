@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9408af61-339c-4157-9db7-94671ca0414e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Census-Management-System.iml" afterPath="$PROJECT_DIR$/.idea/Census-Management-System.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Diagrammer.py" afterPath="$PROJECT_DIR$/Diagrammer.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/To be installed.txt" afterPath="$PROJECT_DIR$/To be installed.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Top.py" afterPath="$PROJECT_DIR$/Top.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Backlog.xlsx" afterPath="$PROJECT_DIR$/Backlog.xlsx" />
     </list>
     <ignored path="Census-Management-System.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -44,8 +39,8 @@
       <file leaf-file-name="Top.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Top.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7653959" vertical-offset="3379" max-vertical-offset="4500">
-              <caret line="182" column="75" selection-start-line="182" selection-start-column="75" selection-end-line="182" selection-end-column="75" />
+            <state vertical-scroll-proportion="0.70674485" vertical-offset="3639" max-vertical-offset="4500">
+              <caret line="194" column="8" selection-start-line="194" selection-start-column="8" selection-end-line="194" selection-end-column="8" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -518,8 +513,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Top.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7653959" vertical-offset="3379" max-vertical-offset="4500">
-          <caret line="182" column="75" selection-start-line="182" selection-start-column="75" selection-end-line="182" selection-end-column="75" />
+        <state vertical-scroll-proportion="0.70674485" vertical-offset="3639" max-vertical-offset="4500">
+          <caret line="194" column="8" selection-start-line="194" selection-start-column="8" selection-end-line="194" selection-end-column="8" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

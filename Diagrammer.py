@@ -1,9 +1,7 @@
-import matplotlib
 import matplotlib.pyplot as pyplot
 
 def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
 
-    matplotlib.use('pdf')
     pyplot.title(title)
     pyplot.xlabel(x_title)
     pyplot.ylabel(y_title)

@@ -75,7 +75,9 @@ def find_countries(sheet, year):
     print(items)
     return None
 
+
 def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
+
     row_country_m, col_country_m = find_row_col_index(country, worksheet_male)
     row_year_m, col_year_m = find_row_col_index(year, worksheet_male)
 
@@ -88,6 +90,19 @@ def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
 
     return val_male, val_female
 
+
+def get_data_by_country(worksheet_male, worksheet_female, country):
+
+    male_population = []
+    female_population = []
+
+    # for each year in 1950,2015
+    for year in range(1950, 2016):
+        male_val, female_val = get_data_by_country_year(worksheet_male, worksheet_female, country, str(year))
+        male_population.append(male_val)
+        female_population.append(female_val)
+
+    return male_population, female_population
 
 def change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val):
     row_country_m, col_country_m = find_row_col_index(country, workbook_male.sheet_by_name('ESTIMATES'))
@@ -115,6 +130,21 @@ def find_row_col_index(string_value, sheet):
                     return i,j
     return None
 
+# for getting a valid option from user, options is the list of valid choices
+def get_input_option(options, explanation):
+
+    while True:
+        # getting option
+        option = raw_input(explanation)
+        # if option is among options return true
+        if option in options:
+            return option
+        else:
+            print("Invalid choice. You can only choose from ")
+            print(options)
+
+
+
 while True:
     print('please enter command number:')
     print('1. get population information for male and female.')
@@ -123,81 +153,67 @@ while True:
     print('4. plot population information for future.')
     print('5. sort population information.')
     print('6. exit.')
-    command = input('enter command: ')
+    command = get_input_option(["1", "2", "3", "4", "5", "6"], 'enter command: ')
 
     if command == '1':
-        country = input('enter country: ')
-        year = input('enter year: ')
+        country = raw_input('enter country: ')
+        year = raw_input('enter year: ')
         male_res, female_res = get_data_by_country_year(worksheet_male, worksheet_female, country, year)
         print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res)+'\n')
-    else:
-        if command == '2':
-            country = raw_input('enter country: ')
-            year = raw_input('enter year: ')
-            male_or_female = raw_input('enter male or female: ')
-            new_val = raw_input('enter new value: ')
-            change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val)
-            print('Done.')
-        else:
-            if command == '3':
-                country = input('enter country')
-                sex = input('enter sex, m for male anything else for female')
 
-                worksheet = ''
+    if command == '2':
+        country = raw_input('enter country: ')
+        year = raw_input('enter year: ')
+        male_or_female = raw_input('enter male or female: ')
+        new_val = raw_input('enter new value: ')
+        change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val)
+        print('Done.')
 
-                if sex == 'm':
-                    worksheet = worksheet_male
-                else:
-                    worksheet = workbook_female
+    if command == '3':
+        country = raw_input('enter country')
+        sex = raw_input('enter sex, m for male, f for female or anything else for both')
+        output_dir = raw_input('output dir?')
+        male_population, female_population = get_data_by_country(worksheet_male, worksheet_female, country)
+        draw_male = (sex != "f")
+        draw_female = (sex != "m")
 
-                output_dir = input('output dir?')
-                x = range(1950, 2015)
+        if draw_male:
+            Diagrammer.draw_diagram(range(1950, 2016), male_population, 'male_population', 'year', '1000 persons', output_dir + "male.pdf")
+        if draw_female:
+            Diagrammer.draw_diagram(range(1950, 2016), male_population, 'female_population', 'year', '1000 persons', output_dir + "female.pdf")
 
-                row_country_m, col_country_m = find_row_col_index(country, worksheet)
+        print('Diagram was created successfully')
 
-                y = []
 
-                for year in x:
+    if command == '4':
+        #request4()
+        print('4')
 
-                    row_year_m, col_year_m = find_row_col_index(year, worksheet)
-                    val = worksheet.cell(row_country_m, col_year_m).value
-                    y.append(val)
+    if command == '5':
+        year = raw_input('please insert year number:')
+        year = int(year)
+        find_countries(workbook_pop_growth, year)
 
-                Diagrammer.draw_diagram(x, y, 'population', 'year', '1000 persons', output_dir)
-                print('Diagram was created successfully')
+    if command == '6':
+        #request5()
+        print('6')
+        break
 
-            else:
-                if command == '4':
-                    #request4()
-                    print('4')
-                else:
-                    if command == '5':
-                        year = input('please insert year number:')
-                        year = int(year)
-                        find_countries(workbook_pop_growth, year)
-                    else:
-                        if command == '6':
-                            #request5()
-                            print('6')
-                            break
-                        else:
-                            if command == '7':
-                                year = input('please insert year number:')
-                                year = int(year)
-                                find_negative_growth_countries(workbook_pop_growth, year)
-                                break
-                            else:
-                                if command == '8':
-                                    #request5()
-                                    print('6')
-                                    break
-                                else:
-                                    if command == '9':
-                                        first = input('please insert first of interval:')
-                                        first = int(first)
-                                        last = input('please insert last of interval:')
-                                        last = int(last)
-                                        find_sorted_countries_interval(workbook_pop_growth, first, last)
-                                        break
-                                    else:
-                                        print('invalid instruction!')
+    if command == '7':
+        year = raw_input('please insert year number:')
+        year = int(year)
+        find_negative_growth_countries(workbook_pop_growth, year)
+        break
+
+    if command == '8':
+        #request5()
+        print('6')
+        break
+
+    if command == '9':
+        first = raw_input('please insert first of interval:')
+        first = int(first)
+        last = raw_input('please insert last of interval:')
+        last = int(last)
+        find_sorted_countries_interval(workbook_pop_growth, first, last)
+        break

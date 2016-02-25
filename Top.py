@@ -209,8 +209,28 @@ while True:
         print('Diagram was created successfully')
 
     if command == '4':
-        #request4()
-        print('4')
+
+        country = raw_input('Country?')
+        estimate_methods = ['ESTIMATES', 'MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
+                            'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
+                            'CONSTANT-MORTALITY', 'NO CHANGE']
+        print('choose a method among :')
+        print(estimate_methods)
+        method = get_input_option(estimate_methods, 'method?')
+        estimate_methods.index(method)
+        male_sheet = workbook_male.sheet_by_index(estimate_methods.index(method))
+        female_sheet = workbook_female.sheet_by_index(estimate_methods.index(method))
+        print(male_sheet.cell(50, 10).value)
+        male_data, female_data = get_data_by_country(male_sheet, female_sheet, country)
+        total_population = []
+        for i in range(len(male_data)):
+            total_population.append(male_data[i] + female_data[i])
+
+        output_dir = raw_input('output directory?')
+        Diagrammer.draw_diagram(range(1950, 2016), total_population, 'population', 'year', '1000 persons',
+                                output_dir + 'population.pdf')
+        print('Diagram was drawn successfully!')
+
 
     if command == '5':
         year = raw_input('please insert year number:')
@@ -222,7 +242,7 @@ while True:
         output_dir = raw_input('output directory?')
         data_male = get_data_by_year(worksheet_male, year)
         data_female = get_data_by_year(worksheet_female, year)
-     
+
         Diagrammer.draw_box_diagram(data_male, 'Countries Male Population', '1000 persons', output_dir + 'countries_male_population.pdf')
         Diagrammer.draw_box_diagram(data_female, 'Countries Female Population', '1000 persons', output_dir + 'countries_female_population.pdf')
         print('Diagrams were drawn successfully!')

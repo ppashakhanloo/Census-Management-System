@@ -4,6 +4,8 @@ import unicodedata
 
 def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
 
+    pyplot.clf()
+
     pyplot.title(title)
     pyplot.xlabel(x_title)
     pyplot.ylabel(y_title)
@@ -38,6 +40,8 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
 
 
 def draw_box_diagram(data, plot_title, y_title, output_dir):
+
+    pyplot.clf()
 
     pyplot.title(plot_title)
     pyplot.ylabel(y_title)

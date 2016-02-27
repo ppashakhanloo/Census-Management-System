@@ -1,4 +1,6 @@
 import matplotlib.pyplot as pyplot
+import unicodedata
+
 
 def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
 
@@ -33,6 +35,7 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
     pyplot.axis([min_x, max_x, min_y, max_y])
     pyplot.plot(points_x, points_y, color='black', linestyle='solid', linewidth=1)
     pyplot.savefig(output_dir)
+
 
 def draw_box_diagram(data, plot_title, y_title, output_dir):
 

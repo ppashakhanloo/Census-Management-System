@@ -2,6 +2,7 @@ import xlrd
 from xlutils.copy import copy
 import os
 import Diagrammer
+import xlwt
 
 
 workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS', formatting_info=True)
@@ -33,19 +34,20 @@ def find_negative_growth_countries(sheet, year):
                 if x < 0 :
                     data[row[2]] = x
     items = [k for k, v in data.items()]
-    print(items)
+    print(", ".join(items))
     return None
 
 
 def find_sorted_countries_interval(sheet, first, last):
-    keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
-               'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
-               'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
-               'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
-               'Micronesia','Polynesia']
+    keywords = ['WORLD', 'Sub-Saharan Africa', 'AFRICA', 'Eastern Africa', 'Middle Africa', 'Northern Africa', 'Southern Africa', 'Western Africa',
+               'ASIA', 'Eastern Asia', 'South-Central Asia', 'Central Asia', 'Southern Asia', 'South-Eastern Asia', 'Western Asia',
+               'EUROPE', 'Eastern Europe','Northern Europe', 'Southern Europe', 'Western Europe', 'LATIN AMERICA AND THE CARIBBEAN',
+               'Caribbean', 'Central America', 'South America', 'NORTHERN AMERICA', 'OCEANIA', 'Australia/New Zealand', 'Melanesia',
+               'Micronesia', 'Polynesia']
     data = {}
-    if (last%5)==0:
-            last = last-1
+    if (last % 5) == 0:
+            last -= 1
+
     first = (first-1950)//5 + 5
     last = (last -1950)//5 + 5
     for i in range(sheet.nrows):
@@ -54,7 +56,7 @@ def find_sorted_countries_interval(sheet, first, last):
             if not(row[2] in keywords):
                 x = 0
                 for j in range(first,last+1) :
-                    x = x+int(float(row[j])*100)
+                    x += int(float(row[j])*100)
                 data[row[2]] = x
     items = [(v, k) for k, v in data.items()]
     items.sort()
@@ -65,11 +67,11 @@ def find_sorted_countries_interval(sheet, first, last):
 
 
 def find_countries(sheet, year):
-    keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
-               'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
-               'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
-               'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
-               'Micronesia','Polynesia']
+    keywords = ['WORLD', 'Sub-Saharan Africa', 'AFRICA', 'Eastern Africa', 'Middle Africa', 'Northern Africa', 'Southern Africa', 'Western Africa',
+               'ASIA', 'Eastern Asia', 'South-Central Asia', 'Central Asia', 'Southern Asia', 'South-Eastern Asia', 'Western Asia',
+               'EUROPE', 'Eastern Europe', 'Northern Europe', 'Southern Europe', 'Western Europe','LATIN AMERICA AND THE CARIBBEAN',
+               'Caribbean', 'Central America', 'South America', 'NORTHERN AMERICA', 'OCEANIA', 'Australia/New Zealand', 'Melanesia',
+               'Micronesia', 'Polynesia']
     data = {}
     for i in range(sheet.nrows):
         if i > 27:
@@ -80,12 +82,11 @@ def find_countries(sheet, year):
     items.sort()
     items.reverse()             # so largest is first
     items = [k for v, k in items]
-    print(items)
+    print(", ".join(items))
     return None
 
 
 def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
-
     row_country_m, col_country_m = find_row_col_index(country, worksheet_male)
     row_year_m, col_year_m = find_row_col_index(year, worksheet_male)
 
@@ -100,7 +101,6 @@ def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
 
 
 def get_data_by_country(worksheet_male, worksheet_female, country, start_year, end_year):
-
     male_population = []
     female_population = []
 
@@ -127,6 +127,10 @@ def get_data_by_year(data_sheet, year):
 
 
 def change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val):
+
+    style = xlwt.XFStyle()
+    style.num_format_str = '0.00'
+
     row_country_m, col_country_m = find_row_col_index(country, workbook_male.sheet_by_name('ESTIMATES'))
     row_year_m, col_year_m = find_row_col_index(year, workbook_male.sheet_by_name('ESTIMATES'))
 
@@ -137,25 +141,24 @@ def change_data_by_country_year(workbook_male, workbook_female, country, year, m
     wb_female = copy(workbook_female)
 
     if male_or_female == 'male':
-        wb_male.get_sheet(0).write(row_country_m, col_year_m, float(new_val))
+        wb_male.get_sheet(0).write(row_country_m, col_year_m, new_val, style)
         wb_male.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS')
     elif male_or_female == 'female':
-        wb_female.get_sheet(0).write(row_country_f, col_year_f, float(new_val))
+        wb_female.get_sheet(0).write(row_country_f, col_year_f, new_val, style)
         wb_female.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_FEMALE.XLS')
 
 
 def find_row_col_index(string_value, sheet):
     for i in range(sheet.nrows):
-         row = sheet.row_values(i)
-         for j in range(len(row)):
-              if row[j] == string_value:
-                    return i,j
+        row = sheet.row_values(i)
+        for j in range(len(row)):
+            if row[j] == string_value:
+                return i,j
     return None
 
 
 # for getting a valid option from user, options is the list of valid choices
 def get_input_option(options, explanation):
-
     while True:
         # getting option
         option = raw_input(explanation)
@@ -177,7 +180,6 @@ while True:
     print('6. Plot population of countries in box plot.')
     print('7. get countries with negative growth rate.')
     print('8. exit.')
-    # print('8. exit.')
     # print('9. exit.')
     # print('10. exit.')
 
@@ -193,14 +195,14 @@ while True:
         country = raw_input('enter country: ')
         year = raw_input('enter year: ')
         male_or_female = raw_input('enter male or female: ')
-        new_val = raw_input('enter new value: ')
-        change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, new_val)
+        new_val = raw_input('enter new value as a floating point number: ')
+        change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, float(new_val))
         print('Done.')
 
     if command == '3':
-        country = raw_input('enter country')
-        sex = raw_input('enter sex, m for male, f for female or anything else for both')
-        output_dir = raw_input('output dir?')
+        country = raw_input('enter country: ')
+        sex = raw_input('enter sex, m for male, f for female or anything else for both: ')
+        output_dir = raw_input('output dir? ')
         male_population, female_population = get_data_by_country(worksheet_male, worksheet_female, country, 1950, 2015)
         draw_male = (sex != "f")
         draw_female = (sex != "m")
@@ -214,11 +216,11 @@ while True:
 
     if command == '4':
 
-        country = raw_input('Country?')
+        country = raw_input('country: ')
         estimate_methods = ['MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
                             'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
                             'CONSTANT-MORTALITY', 'NO CHANGE']
-        print('choose a method among :')
+        print('choose a method:')
         print(estimate_methods)
         method = get_input_option(estimate_methods, 'method?')
         estimate_methods.index(method)
@@ -229,19 +231,19 @@ while True:
         for i in range(len(male_data)):
             total_population.append(male_data[i] + female_data[i])
 
-        output_dir = raw_input('output directory?')
+        output_dir = raw_input('output directory? ')
         Diagrammer.draw_diagram(range(2015, 2101), total_population, 'population', 'year', '1000 persons',
                                 output_dir + 'population.pdf')
         print('Diagram was drawn successfully!')
 
     if command == '5':
-        year = raw_input('please insert year number:')
+        year = raw_input('year: ')
         year = int(year)
         find_countries(workbook_pop_growth, year)
 
     if command == '6':
-        year = raw_input('year?')
-        output_dir = raw_input('output directory?')
+        year = raw_input('year: ')
+        output_dir = raw_input('output directory? ')
         data_male = get_data_by_year(worksheet_male, year)
         data_female = get_data_by_year(worksheet_female, year)
 
@@ -250,7 +252,7 @@ while True:
         print('Diagrams were drawn successfully!')
 
     if command == '7':
-        year = raw_input('please insert year number:')
+        year = raw_input('year: ')
         year = int(year)
         find_negative_growth_countries(workbook_pop_growth, year)
         break
@@ -261,9 +263,9 @@ while True:
         break
 
     if command == '9':
-        first = raw_input('please insert first of interval:')
+        first = raw_input('please insert first of interval: ')
         first = int(first)
-        last = raw_input('please insert last of interval:')
+        last = raw_input('please insert last of interval: ')
         last = int(last)
         find_sorted_countries_interval(workbook_pop_growth, first, last)
         break

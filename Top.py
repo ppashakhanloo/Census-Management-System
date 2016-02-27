@@ -17,6 +17,7 @@ non_country_keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','
                'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
                'Micronesia','Polynesia']
 
+
 def find_negative_growth_countries(sheet, year):
     keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
                'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
@@ -61,6 +62,7 @@ def find_sorted_countries_interval(sheet, first, last):
     items = [k for v, k in items]
     print(items)
     return None
+
 
 def find_countries(sheet, year):
     keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
@@ -135,10 +137,10 @@ def change_data_by_country_year(workbook_male, workbook_female, country, year, m
     wb_female = copy(workbook_female)
 
     if male_or_female == 'male':
-        wb_male.get_sheet(0).write(row_country_m, col_year_m, new_val)
+        wb_male.get_sheet(0).write(row_country_m, col_year_m, float(new_val))
         wb_male.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS')
     elif male_or_female == 'female':
-        wb_female.get_sheet(0).write(row_country_f, col_year_f, new_val)
+        wb_female.get_sheet(0).write(row_country_f, col_year_f, float(new_val))
         wb_female.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_FEMALE.XLS')
 
 
@@ -149,6 +151,7 @@ def find_row_col_index(string_value, sheet):
               if row[j] == string_value:
                     return i,j
     return None
+
 
 # for getting a valid option from user, options is the list of valid choices
 def get_input_option(options, explanation):
@@ -164,20 +167,21 @@ def get_input_option(options, explanation):
             print(options)
 
 
-
 while True:
     print('please enter command number:')
     print('1. get population information for male and female.')
     print('2. change population information for a country at special year.')
-    print('3. plot population information of of a country.')
+    print('3. plot population information of a country.')
     print('4. plot population information for future.')
     print('5. sort population information.')
-    print('6. exit.')
-    print('7. Plot population of countries in boxplot.')
+    print('6. Plot population of countries in box plot.')
+    print('7. get countries with negative growth rate.')
     print('8. exit.')
-    print('9. exit.')
-    print('10. exit.')
-    command = get_input_option(["1", "2", "3", "4", "5", "6"], 'enter command: ')
+    # print('8. exit.')
+    # print('9. exit.')
+    # print('10. exit.')
+
+    command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8"], 'enter command: ')
 
     if command == '1':
         country = raw_input('enter country: ')
@@ -204,7 +208,7 @@ while True:
         if draw_male:
             Diagrammer.draw_diagram(range(1950, 2016), male_population, 'male_population', 'year', '1000 persons', output_dir + "male.pdf")
         if draw_female:
-            Diagrammer.draw_diagram(range(1950, 2016), male_population, 'female_population', 'year', '1000 persons', output_dir + "female.pdf")
+            Diagrammer.draw_diagram(range(1950, 2016), female_population, 'female_population', 'year', '1000 persons', output_dir + "female.pdf")
 
         print('Diagram was created successfully')
 
@@ -253,7 +257,7 @@ while True:
 
     if command == '8':
         #request5()
-        print('6')
+        # print('6')
         break
 
     if command == '9':

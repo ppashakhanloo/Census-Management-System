@@ -34,7 +34,6 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
     pyplot.plot(points_x, points_y, color='black', linestyle='solid', linewidth=1)
     pyplot.savefig(output_dir)
 
-
 def draw_box_diagram(data, plot_title, y_title, output_dir):
 
     pyplot.title(plot_title)

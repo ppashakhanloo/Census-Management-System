@@ -239,10 +239,11 @@ while True:
     print('6. Plot population of countries in box plot.')
     print('7. get countries with negative growth rate.')
     print('8. Different growth estimates diagram for a country.')
-    # print('9. exit.')
-    # print('10. exit.')
+    print('9. sth.')
+    print('10. sth.')
+    print('11. exit.')
 
-    command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9"], 'enter command: ')
+    command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"], 'enter command: ')
 
     if command == '1':
         country = raw_input('enter country: ')
@@ -342,4 +343,13 @@ while True:
         last = raw_input('please insert last of interval: ')
         last = int(last)
         find_sorted_countries_interval(workbook_pop_growth, first, last)
+
+    if command == '10':
+        first = raw_input('please insert first of interval: ')
+        first = int(first)
+        last = raw_input('please insert last of interval: ')
+        last = int(last)
+        find_max(workbook_pop_growth, first, last)
+
+    if command == '11':
         break

@@ -19,24 +19,64 @@ non_country_keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','
                'Micronesia','Polynesia']
 
 
-def find_negative_growth_countries(sheet, year):
+def find_negative_growth_countries():
     keywords = ['WORLD','Sub-Saharan Africa','AFRICA','Eastern Africa','Middle Africa', 'Northern Africa','Southern Africa','Western Africa',
                'ASIA','Eastern Asia','South-Central Asia','Central Asia','Southern Asia','South-Eastern Asia','Western Asia',
                'EUROPE','Eastern Europe','Northern Europe','Southern Europe','Western Europe','LATIN AMERICA AND THE CARIBBEAN',
                'Caribbean','Central America','South America','NORTHERN AMERICA','OCEANIA','Australia/New Zealand','Melanesia',
                'Micronesia','Polynesia']
+    estimate_methods = ['MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
+                            'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
+                            'CONSTANT-MORTALITY', 'NO CHANGE']
     data = {}
+    while (True):
+        estimate_type = input('please insert estimation type:')
+        if not(estimate_type in estimate_methods):
+            print('invalid estimation name!')
+        else:
+            break
+    sheet = xlrd.open_workbook('Data/WPP2015_POP_F02_POPULATION_GROWTH_RATE.XLS')
+    sheet = sheet.sheet_by_name(estimate_type)
     for i in range(sheet.nrows):
         if i > 27:
             row = sheet.row_values(i)
             if not(row[2] in keywords):
-                x = int(float(row[(year-1950)//5 + 5])*100)
-                if x < 0 :
-                    data[row[2]] = x
-    items = [k for k, v in data.items()]
-    print(", ".join(items))
+                for j in range(4,21):
+                    x = int(float(row[j])*100)
+                    if x < 0 :
+                        data[row[2]] = x
+                        break
+    item = [(k, v/100.0) for k, v in data.items()]
+    print(item)
     return None
 
+def find_max(sheet, first, last):
+    keywords = ['WORLD', 'Sub-Saharan Africa', 'AFRICA', 'Eastern Africa', 'Middle Africa', 'Northern Africa', 'Southern Africa', 'Western Africa',
+               'ASIA', 'Eastern Asia', 'South-Central Asia', 'Central Asia', 'Southern Asia', 'South-Eastern Asia', 'Western Asia',
+               'EUROPE', 'Eastern Europe','Northern Europe', 'Southern Europe', 'Western Europe', 'LATIN AMERICA AND THE CARIBBEAN',
+               'Caribbean', 'Central America', 'South America', 'NORTHERN AMERICA', 'OCEANIA', 'Australia/New Zealand', 'Melanesia',
+               'Micronesia', 'Polynesia']
+    data = {}
+    if (last % 5) == 0:
+            last -= 1
+
+    first = (first-1950)//5 + 5
+    last = (last -1950)//5 + 5
+    for i in range(sheet.nrows):
+        if i > 27:
+            row = sheet.row_values(i)
+            if not(row[2] in keywords):
+                x = int(float(row[first])*100)
+                for j in range(first+1,last+1) :
+                    if x < int(float(row[j])*100):
+                        x = int(float(row[j])*100)
+                data[row[2]] = x
+    items = [(v, k) for k, v in data.items()]
+    items.sort()
+    items.reverse()             # so largest is first
+    items = [(k, v/100.0) for v, k in items]
+    print(items)
+    return None
 
 def find_sorted_countries_interval(sheet, first, last):
     keywords = ['WORLD', 'Sub-Saharan Africa', 'AFRICA', 'Eastern Africa', 'Middle Africa', 'Northern Africa', 'Southern Africa', 'Western Africa',
@@ -57,13 +97,15 @@ def find_sorted_countries_interval(sheet, first, last):
                 x = 0
                 for j in range(first,last+1) :
                     x += int(float(row[j])*100)
+                x = x//(last-first+1)
                 data[row[2]] = x
     items = [(v, k) for k, v in data.items()]
     items.sort()
     items.reverse()             # so largest is first
-    items = [k for v, k in items]
+    items = [(k, v/100.0) for v, k in items]
     print(items)
     return None
+
 
 
 def find_countries(sheet, year):
@@ -80,10 +122,11 @@ def find_countries(sheet, year):
                 data[row[2]] = int(float(row[(year-1950)//5 + 5])*100)
     items = [(v, k) for k, v in data.items()]
     items.sort()
-    items.reverse()             # so largest is first
-    items = [k for v, k in items]
-    print(", ".join(items))
+    items.reverse()# so largest is first
+    items = [(k, v/100.0) for v, k in items]
+    print(items)
     return None
+
 
 
 def get_data_by_country_year(worksheet_male, worksheet_female, country, year):
@@ -268,9 +311,7 @@ while True:
         print('Diagrams were drawn successfully!')
 
     if command == '7':
-        year = raw_input('year: ')
-        year = int(year)
-        find_negative_growth_countries(workbook_pop_growth, year)
+        find_negative_growth_countries()
         break
 
     if command == '8':

@@ -2,9 +2,11 @@ import matplotlib.pyplot as pyplot
 import unicodedata
 
 
-def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
+def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir,
+                 clear_diagram=True, color='black', add_legend=False, legend_title=''):
 
-    pyplot.clf()
+    if clear_diagram:
+        pyplot.clf()
 
     pyplot.title(title)
     pyplot.xlabel(x_title)
@@ -34,8 +36,11 @@ def draw_diagram(points_x, points_y, title, x_title, y_title, output_dir):
     min_y -= del_y
     max_y += del_y
 
+    if add_legend:
+        pyplot.legend()
+
     pyplot.axis([min_x, max_x, min_y, max_y])
-    pyplot.plot(points_x, points_y, color='black', linestyle='solid', linewidth=1)
+    pyplot.plot(points_x, points_y, color=color, linestyle='solid', linewidth=1, label=legend_title)
     pyplot.savefig(output_dir)
 
 

@@ -229,6 +229,34 @@ def get_input_option(options, explanation):
             print(options)
 
 
+def make_protected(workbook_male, workbook_female, worksheet_male, worksheet_female, country):
+
+    row_country_m, col_country_m = find_row_col_index(country, worksheet_male)
+    row_country_f, col_country_f = find_row_col_index(country, worksheet_female)
+
+    wb_male = copy(workbook_male)
+    wb_female = copy(workbook_female)
+
+    for i in range(17, 258):
+        for j in range(3, 50):
+            if i != row_country_m:
+                wb_male.get_sheet(0).write(i, j, worksheet_male.cell(i, j).value, xlwt.easyxf('protection: cell_locked false;'))
+            else:
+                wb_male.get_sheet(0).write(i, j, worksheet_male.cell(i, j).value, xlwt.easyxf('protection: cell_locked true;'))
+    wb_male.get_sheet(0).set_protect(True)
+    wb_male.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS')
+
+    for i in range(17, 258):
+        for j in range(3, 50):
+            if i != row_country_f:
+                wb_female.get_sheet(0).write(i, j, worksheet_female.cell(i, j).value, xlwt.easyxf('protection: cell_locked false;'))
+            else:
+                wb_female.get_sheet(0).write(i, j, worksheet_female.cell(i, j).value, xlwt.easyxf('protection: cell_locked true;'))
+    wb_female.get_sheet(0).set_protect(True)
+    wb_female.save('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_FEMALE.XLS')
+
+
+
 while True:
     print('please enter command number:')
     print('1. get population information for male and female.')
@@ -241,7 +269,8 @@ while True:
     print('8. Different growth estimates diagram for a country.')
     print('9. sth.')
     print('10. sth.')
-    print('11. exit.')
+    print('11. choose a country to protect.')
+    print('12. exit.')
 
     command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"], 'enter command: ')
 
@@ -352,4 +381,9 @@ while True:
         find_max(workbook_pop_growth, first, last)
 
     if command == '11':
+        country = raw_input('country: ')
+        make_protected(workbook_male, workbook_female, worksheet_male, worksheet_female, country)
+        print('Done.')
+
+    if command == '12':
         break

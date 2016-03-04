@@ -1,1 +1,0 @@
- setuptools, python-dateutil, pytz, pyparsing, and cycler in addition to matplotlib.

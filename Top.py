@@ -162,9 +162,6 @@ def get_growth_data_by_country(worksheet, country, years_ranges):
 
     # for each year in range
     for year_range in years_ranges:
-#    for year_col in range(5, 21):
-#        print(worksheet.cell(16,year_col).value)
-        #print(year_range)
         row_country_m, col_country_m = find_row_col_index(country, worksheet)
         row_year_m, col_year_m = find_row_col_index(year_range, worksheet)
         data.append(worksheet.cell(row_country_m, col_year_m).value)
@@ -174,7 +171,7 @@ def get_growth_data_by_country(worksheet, country, years_ranges):
 
 def get_data_by_year(data_sheet, year):
 
-    row_year_m, col_year_m = find_row_col_index(year, data_sheet)
+    row_year_m, col_year_m = find_row_col_index(str(year), data_sheet)
 
     data = []
     for i in range(28, data_sheet.nrows):
@@ -272,15 +269,23 @@ while True:
     print('11. choose a country to protect.')
     print('12. exit.')
 
-    command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"], 'enter command: ')
+    command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], 'enter command: ')
 
     if command == '1':
+
+        worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
+        worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+
         country = raw_input('enter country: ')
         year = raw_input('enter year: ')
         male_res, female_res = get_data_by_country_year(worksheet_male, worksheet_female, country, year)
         print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res)+'\n')
 
     if command == '2':
+
+        workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS', formatting_info=True)
+        workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS', formatting_info=True)
+
         country = raw_input('enter country: ')
         year = raw_input('enter year: ')
         male_or_female = raw_input('enter male or female: ')
@@ -289,6 +294,9 @@ while True:
         print('Done.')
 
     if command == '3':
+        worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
+        worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+
         country = raw_input('enter country: ')
         sex = raw_input('enter sex, m for male, f for female or anything else for both: ')
         output_dir = raw_input('output dir? ')
@@ -297,9 +305,11 @@ while True:
         draw_female = (sex != "m")
 
         if draw_male:
-            Diagrammer.draw_diagram(range(1950, 2016), male_population, 'male_population', 'year', '1000 persons', output_dir + "male.pdf")
+            Diagrammer.draw_diagram(range(1950, 2016), male_population, country+' male population', 'year',
+                                    '1000 persons', output_dir + "male_population.pdf")
         if draw_female:
-            Diagrammer.draw_diagram(range(1950, 2016), female_population, 'female_population', 'year', '1000 persons', output_dir + "female.pdf")
+            Diagrammer.draw_diagram(range(1950, 2016), female_population, country + ' female population',
+                                    'year', '1000 persons', output_dir + "female_population.pdf")
 
         print('Diagram was created successfully')
 
@@ -313,16 +323,17 @@ while True:
         print(estimate_methods)
         method = get_input_option(estimate_methods, 'method?')
         estimate_methods.index(method)
-        worksheet_male = workbook_male.sheet_by_name(method)
-        worksheet_female = workbook_female.sheet_by_name(method)
-        male_data, female_data = get_data_by_country(worksheet_male, worksheet_female, country, 2015, 2100)
+        m_worksheet = workbook_male.sheet_by_name(method)
+        f_worksheet = workbook_female.sheet_by_name(method)
+        male_data, female_data = get_data_by_country(m_worksheet, f_worksheet, country, 2015, 2100)
         total_population = []
         for i in range(len(male_data)):
             total_population.append(male_data[i] + female_data[i])
 
         output_dir = raw_input('output directory? ')
-        Diagrammer.draw_diagram(range(2015, 2101), total_population, 'population', 'year', '1000 persons',
-                                output_dir + 'population.pdf')
+        Diagrammer.draw_diagram(range(2015, 2101), total_population, country + ' estimated total population based on ' + method
+                                , 'year', '1000 persons',
+                                output_dir + 'estimated_total_population.pdf')
         print('Diagram was drawn successfully!')
 
     if command == '5':
@@ -331,13 +342,18 @@ while True:
         find_countries(workbook_pop_growth, year)
 
     if command == '6':
+
+        worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
+        worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+
         year = raw_input('year: ')
         output_dir = raw_input('output directory? ')
+
         data_male = get_data_by_year(worksheet_male, year)
         data_female = get_data_by_year(worksheet_female, year)
 
-        Diagrammer.draw_box_diagram(data_male, 'Countries Male Population', '1000 persons', output_dir + 'countries_male_population.pdf')
-        Diagrammer.draw_box_diagram(data_female, 'Countries Female Population', '1000 persons', output_dir + 'countries_female_population.pdf')
+        Diagrammer.draw_box_diagram(data_male, 'Countries Male Population in ' + str(year), '1000 persons', output_dir + 'countries_male_population.pdf')
+        Diagrammer.draw_box_diagram(data_female, 'Countries Female Population in ' + str(year), '1000 persons', output_dir + 'countries_female_population.pdf')
         print('Diagrams were drawn successfully!')
 
     if command == '7':
@@ -361,8 +377,8 @@ while True:
 
         for i in range(len(estimate_methods)):
             data = get_growth_data_by_country(workbook_pop_growth_main.sheet_by_index(i + 1), country, year_ranges)
-            Diagrammer.draw_diagram(year_mids, data, 'population growth estimates', 'year', 'percentage',
-                                    output_dir + 'populationGrowth.pdf', False, colors[i], True, estimate_methods[i])
+            Diagrammer.draw_diagram(year_mids, data, country +' population growth estimates', 'year', 'percentage',
+                                    output_dir + 'population_growth.pdf', False, colors[i], True, estimate_methods[i])
 
         print('Diagram was drawn successfully!')
 
@@ -381,6 +397,9 @@ while True:
         find_max(workbook_pop_growth, first, last)
 
     if command == '11':
+        worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
+        worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+
         country = raw_input('country: ')
         make_protected(workbook_male, workbook_female, worksheet_male, worksheet_female, country)
         print('Done.')

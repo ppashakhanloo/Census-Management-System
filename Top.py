@@ -255,19 +255,19 @@ def make_protected(workbook_male, workbook_female, worksheet_male, worksheet_fem
 
 
 while True:
-    print('please enter command number:')
-    print('1. get population information for male and female.')
-    print('2. change population information for a country at special year.')
-    print('3. plot population information of a country.')
-    print('4. plot population information for future.')
-    print('5. sort population information.')
+    print('Please enter command number:')
+    print('1. View population information for male and female.')
+    print('2. Change population information for a country at special year.')
+    print('3. Plot population information of a country.')
+    print('4. Plot population information for future.')
+    print('5. Sort population information.')
     print('6. Plot population of countries in box plot.')
-    print('7. get countries with negative growth rate.')
+    print('7. View countries with negative growth rate.')
     print('8. Different growth estimates diagram for a country.')
-    print('9. sth.')
-    print('10. sth.')
-    print('11. choose a country to protect.')
-    print('12. exit.')
+    print('9. View sorted list of countries with regarding to average growth rate.')
+    print('10. View sorted list of countries with regarding to maximum average growth rate.')
+    print('11. Choose a country to protect.')
+    print('12. Exit.')
 
     command = get_input_option(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"], 'enter command: ')
 
@@ -276,8 +276,8 @@ while True:
         worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
         worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 
-        country = raw_input('enter country: ')
-        year = raw_input('enter year: ')
+        country = raw_input('Enter country: ')
+        year = raw_input('Enter year: ')
         male_res, female_res = get_data_by_country_year(worksheet_male, worksheet_female, country, year)
         print('Male: '+str(male_res)+'\n'+'Female: '+str(female_res)+'\n')
 
@@ -286,10 +286,10 @@ while True:
         workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS', formatting_info=True)
         workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS', formatting_info=True)
 
-        country = raw_input('enter country: ')
-        year = raw_input('enter year: ')
-        male_or_female = raw_input('enter male or female: ')
-        new_val = raw_input('enter new value as a floating point number: ')
+        country = raw_input('Enter country: ')
+        year = raw_input('Enter year: ')
+        male_or_female = raw_input('Enter male or female: ')
+        new_val = raw_input('Enter new value as a floating point number: ')
         change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, float(new_val))
         print('Done.')
 
@@ -297,12 +297,12 @@ while True:
         worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
         worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 
-        country = raw_input('enter country: ')
-        sex = raw_input('enter sex, m for male, f for female or anything else for both: ')
-        output_dir = raw_input('output dir? ')
+        country = raw_input('Enter country: ')
+        sex = raw_input('Enter male or female or anything else for both: ')
+        output_dir = raw_input('Output directory: ')
         male_population, female_population = get_data_by_country(worksheet_male, worksheet_female, country, 1950, 2015)
-        draw_male = (sex != "f")
-        draw_female = (sex != "m")
+        draw_male = (sex != "female")
+        draw_female = (sex != "male")
 
         if draw_male:
             Diagrammer.draw_diagram(range(1950, 2016), male_population, country+' male population', 'year',
@@ -311,15 +311,15 @@ while True:
             Diagrammer.draw_diagram(range(1950, 2016), female_population, country + ' female population',
                                     'year', '1000 persons', output_dir + "female_population.pdf")
 
-        print('Diagram was created successfully')
+        print('Diagram was successfully created.')
 
     if command == '4':
 
-        country = raw_input('country: ')
+        country = raw_input('Enter country: ')
         estimate_methods = ['MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
                             'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
                             'CONSTANT-MORTALITY', 'NO CHANGE']
-        print('choose a method:')
+        print('Choose a method:')
         print(estimate_methods)
         method = get_input_option(estimate_methods, 'method?')
         estimate_methods.index(method)
@@ -330,14 +330,14 @@ while True:
         for i in range(len(male_data)):
             total_population.append(male_data[i] + female_data[i])
 
-        output_dir = raw_input('output directory? ')
+        output_dir = raw_input('Output directory: ')
         Diagrammer.draw_diagram(range(2015, 2101), total_population, country + ' estimated total population based on ' + method
                                 , 'year', '1000 persons',
                                 output_dir + 'estimated_total_population.pdf')
         print('Diagram was drawn successfully!')
 
     if command == '5':
-        year = raw_input('year: ')
+        year = raw_input('Enter year: ')
         year = int(year)
         find_countries(workbook_pop_growth, year)
 
@@ -346,22 +346,22 @@ while True:
         worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
         worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 
-        year = raw_input('year: ')
-        output_dir = raw_input('output directory? ')
+        year = raw_input('Enter year: ')
+        output_dir = raw_input('Output directory: ')
 
         data_male = get_data_by_year(worksheet_male, year)
         data_female = get_data_by_year(worksheet_female, year)
 
         Diagrammer.draw_box_diagram(data_male, 'Countries Male Population in ' + str(year), '1000 persons', output_dir + 'countries_male_population.pdf')
         Diagrammer.draw_box_diagram(data_female, 'Countries Female Population in ' + str(year), '1000 persons', output_dir + 'countries_female_population.pdf')
-        print('Diagrams were drawn successfully!')
+        print('Diagrams were successfully drawn.')
 
     if command == '7':
         find_negative_growth_countries()
         break
 
     if command == '8':
-        country = raw_input('country: ')
+        country = raw_input('Enter country: ')
         estimate_methods = ['MEDIUM VARIANT', 'HIGH VARIANT', 'LOW VARIANT',
                             'CONSTANT-FERTILITY', 'INSTANT-REPLACEMENT', 'ZERO-MIGRATION',
                             'CONSTANT-MORTALITY', 'NO CHANGE']
@@ -373,26 +373,26 @@ while True:
             year_ranges.append(str(i) + '-' + str(i + 5))
             year_mids.append(i + 2.5)
 
-        output_dir = raw_input('output directory? ')
+        output_dir = raw_input('Output directory: ')
 
         for i in range(len(estimate_methods)):
             data = get_growth_data_by_country(workbook_pop_growth_main.sheet_by_index(i + 1), country, year_ranges)
             Diagrammer.draw_diagram(year_mids, data, country +' population growth estimates', 'year', 'percentage',
                                     output_dir + 'population_growth.pdf', False, colors[i], True, estimate_methods[i])
 
-        print('Diagram was drawn successfully!')
+        print('Diagram was successfully drawn.')
 
     if command == '9':
-        first = raw_input('please insert first of interval: ')
+        first = raw_input('Enter first of interval: ')
         first = int(first)
-        last = raw_input('please insert last of interval: ')
+        last = raw_input('Enter last of interval: ')
         last = int(last)
         find_sorted_countries_interval(workbook_pop_growth, first, last)
 
     if command == '10':
-        first = raw_input('please insert first of interval: ')
+        first = raw_input('Enter first of interval: ')
         first = int(first)
-        last = raw_input('please insert last of interval: ')
+        last = raw_input('Enter last of interval: ')
         last = int(last)
         find_max(workbook_pop_growth, first, last)
 
@@ -400,7 +400,7 @@ while True:
         worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
         worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
 
-        country = raw_input('country: ')
+        country = raw_input('Enter country: ')
         make_protected(workbook_male, workbook_female, worksheet_male, worksheet_female, country)
         print('Done.')
 

@@ -30,7 +30,7 @@ def find_negative_growth_countries():
                             'CONSTANT-MORTALITY', 'NO CHANGE']
     data = {}
     while (True):
-        estimate_type = input('please insert estimation type:')
+        estimate_type = raw_input('please insert estimation type:')
         if not(estimate_type in estimate_methods):
             print('invalid estimation name!')
         else:
@@ -293,6 +293,12 @@ while True:
         change_data_by_country_year(workbook_male, workbook_female, country, year, male_or_female, float(new_val))
         print('Done.')
 
+        # re opening
+        workbook_male = xlrd.open_workbook('Data/WPP2015_POP_F01_2_TOTAL_POPULATION_MALE.XLS', formatting_info=True)
+        workbook_female = xlrd.open_workbook('Data/WPP2015_POP_F01_3_TOTAL_POPULATION_FEMALE.XLS', formatting_info=True)
+        worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
+        worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
+
     if command == '3':
         worksheet_male = workbook_male.sheet_by_name('ESTIMATES')
         worksheet_female = workbook_female.sheet_by_name('ESTIMATES')
@@ -358,7 +364,6 @@ while True:
 
     if command == '7':
         find_negative_growth_countries()
-        break
 
     if command == '8':
         country = raw_input('Enter country: ')
